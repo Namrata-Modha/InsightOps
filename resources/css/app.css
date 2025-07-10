@@ -1,11 +1,106 @@
-@import 'tailwindcss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+/* ----------------------- */
+/*    Password Form Card   */
+/* ----------------------- */
+.card {
+    border-radius: 12px;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    background-color: #fff;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+.card h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    color: #343a40;
+}
+
+.card p {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 1.25rem;
+}
+
+/* ----------------------- */
+/*        Form Inputs      */
+/* ----------------------- */
+input.form-control {
+    display: block;
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    transition: all 0.2s ease-in-out;
+}
+
+input.form-control:focus {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* ----------------------- */
+/*         Labels          */
+/* ----------------------- */
+.form-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+    color: #212529;
+}
+
+/* ----------------------- */
+/*       Buttons           */
+/* ----------------------- */
+.btn {
+    display: inline-block;
+    padding: 0.625rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-radius: 9999px;
+    transition: all 0.2s ease-in-out;
+    text-align: center;
+    border: none;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+.btn-dark {
+    background-color: #343a40;
+    color: #fff;
+    border: none;
+}
+.btn-dark:hover {
+    background-color: #1d2124;
+}
+
+/* ----------------------- */
+/*     Validation Styles   */
+/* ----------------------- */
+.is-invalid {
+    border-color: #dc3545;
+}
+
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
 }
