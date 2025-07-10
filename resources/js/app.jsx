@@ -1,19 +1,26 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+import '../css/app.css';
+import './bootstrap';
 
-function App() {
-    return (
-        <div className="container mt-5">
-            <h1>Hello from React 🚀</h1>
-            <p>This is your InsightOps dashboard!</p>
-        </div>
-    );
-}
+import { createInertiaApp } from '@inertiajs/react';
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import { createRoot } from 'react-dom/client';
 
-const root = document.getElementById('react-root');
+const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
-if (root) {
-    ReactDOM.createRoot(root).render(<App />);
-}
-// If you want to use this file, make sure to include it in your Laravel Blade template:
-// <script type="module" src="{{ mix('js/app.jsx') }}"></script>
+createInertiaApp({
+    title: (title) => `${title} - ${appName}`,
+    resolve: (name) => {
+        const pages = import.meta.glob('./Pages/**/*.jsx');
+        console.log('🔍 Available Inertia pages:', Object.keys(pages));
+        return resolvePageComponent(`./Pages/${name}.jsx`, pages);
+    },
+    setup({ el, App, props }) {
+        const root = createRoot(el);
+        root.render(<App {...props} />);
+    },
+    progress: {
+        color: '#4B5563',
+    },
+});
+// Log the app name to the console
+console.log(`🚀 ${appName} is running!`);
