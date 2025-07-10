@@ -8,43 +8,23 @@ export default function AuthenticatedLayout({ children }) {
     return (
         <div className="flex h-screen bg-gray-100">
             {/* Sidebar */}
-            <aside className="w-64 bg-white border-r shadow-sm">
-                <div className="p-6 font-bold text-lg text-indigo-700">
-                    InsightOps
-                </div>
-                <nav className="px-4 space-y-3">
-                    <Link href="/dashboard" className="block text-gray-700 hover:text-indigo-600">
-                        📊 Dashboard
-                    </Link>
-
-                    {user.role === 'admin' && (
-                        <>
-                            <Link href="/incidents" className="block text-gray-700 hover:text-indigo-600">
-                                🛠 Incidents
-                            </Link>
-                            <Link href="/config-logs" className="block text-gray-700 hover:text-indigo-600">
-                                ⚙️ Config Logs
-                            </Link>
-                            <Link href="/audit-trail" className="block text-gray-700 hover:text-indigo-600">
-                                📜 Audit Trail
-                            </Link>
-                        </>
-                    )}
+            <aside className="w-64 bg-white shadow-md">
+                <div className="px-6 py-4 font-bold text-xl border-b">InsightOps</div>
+                <nav className="flex flex-col gap-2 p-4 text-gray-700">
+                    <Link href={route('dashboard')} className="hover:text-indigo-600">🏠 Dashboard</Link>
+                    <Link href="/report-incident" className="hover:text-indigo-600">🚨 Report Incident</Link>
+                    <Link href="/view-logs" className="hover:text-indigo-600">📜 View Logs</Link>
+                    <Link href="/documents" className="hover:text-indigo-600">📁 Documents</Link>
 
                     {user.role === 'analyst' && (
                         <>
-                            <Link href="/report-incident" className="block text-gray-700 hover:text-indigo-600">
-                                📝 Report Incident
-                            </Link>
-                            <Link href="/view-logs" className="block text-gray-700 hover:text-indigo-600">
-                                📁 View Logs
-                            </Link>
+                            <div className="mt-4 mb-2 text-sm font-semibold text-gray-500 uppercase">Analyst Tools</div>
+                            <Link href={route('analyst.dashboard')} className="hover:text-indigo-600">📊 Analyst Dashboard</Link>
+                            <Link href={route('analyst.logs')} className="hover:text-indigo-600">📜 Logs</Link>
+                            <Link href={route('analyst.kpis')} className="hover:text-indigo-600">📈 KPIs</Link>
+                            <Link href={route('analyst.documents')} className="hover:text-indigo-600">📁 Documents</Link>
                         </>
                     )}
-
-                    <Link href="/documents" className="block text-gray-700 hover:text-indigo-600">
-                        📂 Documents
-                    </Link>
                 </nav>
             </aside>
 

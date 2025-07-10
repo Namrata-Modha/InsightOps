@@ -60,4 +60,17 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function updateAnalyst(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $request->user()->update([
+            'name' => $request->name,
+        ]);
+
+        return back()->with('success', 'Profile updated successfully.');
+    }
 }
