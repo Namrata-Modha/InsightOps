@@ -2,7 +2,7 @@ import React from 'react';
 import { Head, useForm } from '@inertiajs/react';
 
 export default function Register() {
-    const { data, setData, post, processing, errors, setErrors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
         role: 'analyst',
@@ -10,52 +10,56 @@ export default function Register() {
         password_confirmation: '',
     });
 
-    const validateForm = (data) => {
-        const errors = {};
+    // Separate state for client-side validation errors
+    const [clientErrors, setClientErrors] = React.useState({});
 
-        if (!data.name.trim()) errors.name = 'Name is required';
+    const validateForm = (data) => {
+        const errs = {};
+
+        if (!data.name.trim()) errs.name = 'Name is required';
         if (!data.email.trim()) {
-            errors.email = 'Email is required';
+            errs.email = 'Email is required';
         } else if (!/^\S+@\S+\.\S+$/.test(data.email)) {
-            errors.email = 'Invalid email format';
+            errs.email = 'Invalid email format';
         }
 
         if (!data.password) {
-            errors.password = 'Password is required';
+            errs.password = 'Password is required';
         } else {
             if (data.password.length < 8) {
-                errors.password = 'Password must be at least 8 characters';
+                errs.password = 'Password must be at least 8 characters';
             }
             if (!/[a-z]/.test(data.password)) {
-                errors.password = 'Must include at least one lowercase letter';
+                errs.password = 'Must include at least one lowercase letter';
             }
             if (!/[A-Z]/.test(data.password)) {
-                errors.password = 'Must include at least one uppercase letter';
+                errs.password = 'Must include at least one uppercase letter';
             }
             if (!/[0-9]/.test(data.password)) {
-                errors.password = 'Must include at least one number';
+                errs.password = 'Must include at least one number';
             }
             if (!/[!@#$%^&*]/.test(data.password)) {
-                errors.password = 'Must include one special character (!@#$%^&*)';
+                errs.password = 'Must include one special character (!@#$%^&*)';
             }
         }
 
         if (data.password !== data.password_confirmation) {
-            errors.password_confirmation = 'Passwords do not match';
+            errs.password_confirmation = 'Passwords do not match';
         }
 
-        return errors;
+        return errs;
     };
 
     const submit = (e) => {
         e.preventDefault();
-        const clientErrors = validateForm(data);
+        const foundErrors = validateForm(data);
 
-        if (Object.keys(clientErrors).length > 0) {
-            setErrors(clientErrors);
+        if (Object.keys(foundErrors).length > 0) {
+            setClientErrors(foundErrors); // ✅ set client errors
             return;
         }
 
+        setClientErrors({}); // clear client errors before submit
         post(route('register'));
     };
 
@@ -65,9 +69,12 @@ export default function Register() {
 
             <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 px-4">
                 <div className="w-full max-w-md bg-white p-8 rounded-lg shadow">
-                    <h1 className="text-2xl font-bold mb-6 text-center text-indigo-700">Create an InsightOps Account</h1>
+                    <h1 className="text-2xl font-bold mb-6 text-center text-indigo-700">
+                        Create an InsightOps Account
+                    </h1>
 
                     <form onSubmit={submit} className="space-y-5">
+                        {/* Name */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Name</label>
                             <input
@@ -77,9 +84,14 @@ export default function Register() {
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                                 required
                             />
-                            {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name}</p>}
+                            {(clientErrors.name || errors.name) && (
+                                <p className="text-red-600 text-sm mt-1">
+                                    {clientErrors.name || errors.name}
+                                </p>
+                            )}
                         </div>
 
+                        {/* Email */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Email</label>
                             <input
@@ -89,9 +101,14 @@ export default function Register() {
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                                 required
                             />
-                            {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
+                            {(clientErrors.email || errors.email) && (
+                                <p className="text-red-600 text-sm mt-1">
+                                    {clientErrors.email || errors.email}
+                                </p>
+                            )}
                         </div>
 
+                        {/* Role */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Role</label>
                             <select
@@ -103,9 +120,14 @@ export default function Register() {
                                 <option value="analyst">Analyst</option>
                                 <option value="admin">Admin</option>
                             </select>
-                            {errors.role && <p className="text-red-600 text-sm mt-1">{errors.role}</p>}
+                            {(clientErrors.role || errors.role) && (
+                                <p className="text-red-600 text-sm mt-1">
+                                    {clientErrors.role || errors.role}
+                                </p>
+                            )}
                         </div>
 
+                        {/* Password */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Password</label>
                             <input
@@ -115,9 +137,14 @@ export default function Register() {
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                                 required
                             />
-                            {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password}</p>}
+                            {(clientErrors.password || errors.password) && (
+                                <p className="text-red-600 text-sm mt-1">
+                                    {clientErrors.password || errors.password}
+                                </p>
+                            )}
                         </div>
 
+                        {/* Confirm Password */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
                             <input
@@ -127,11 +154,14 @@ export default function Register() {
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                                 required
                             />
-                            {errors.password_confirmation && (
-                                <p className="text-red-600 text-sm mt-1">{errors.password_confirmation}</p>
+                            {(clientErrors.password_confirmation || errors.password_confirmation) && (
+                                <p className="text-red-600 text-sm mt-1">
+                                    {clientErrors.password_confirmation || errors.password_confirmation}
+                                </p>
                             )}
                         </div>
 
+                        {/* Submit */}
                         <div>
                             <button
                                 type="submit"
@@ -147,8 +177,3 @@ export default function Register() {
         </>
     );
 }
-// This component handles user registration with form validation and error handling.
-// It includes fields for name, email, role selection, and password with confirmation.
-// The form validates input and displays appropriate error messages for each field.
-// The role can be either 'analyst' or 'admin', with different permissions in the application.
-// The form submission is handled using Inertia.js, posting the data to the server for processing
