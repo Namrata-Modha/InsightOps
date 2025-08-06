@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\AccessLog;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -41,12 +42,17 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         $user = Auth::user();
+        AccessLog::create([
+            'user_id' => Auth::id(),
+            'ip_address' => request()->ip(),
+            'login_at' => now(),
+        ]);
 
         if ($user->role === 'analyst') {
             return redirect()->route('analyst.dashboard');
         }
 
-        return redirect()->intended('/dashboard');
+        return redirect()->route('admin.dashboard');
     }
 
     /**
@@ -54,6 +60,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        $log = AccessLog::where('user_id', Auth::id())
+                ->whereNull('logout_at')
+                ->latest('login_at')
+                ->first();
+
+        if ($log) {
+            $log->update(['logout_at' => now()]);
+        }
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

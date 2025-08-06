@@ -10,6 +10,12 @@ use App\Http\Controllers\AnalystController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\KpiController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\AdminLogController;
+use App\Http\Controllers\Admin\AdminDocumentController;
+use App\Http\Middleware\RoleMiddleware;
+
 
 /**
  * Web Routes for the InsightOps application.
@@ -56,6 +62,35 @@ Route::middleware(['auth', \App\Http\Middleware\RoleMiddleware::class . ':analys
     Route::post('/analyst/documents/upload', [DocumentController::class, 'store'])->name('analyst.documents.upload');
     Route::get('/analyst/logs/export', [LogController::class, 'export'])->name('analyst.logs.export');
     Route::get('/analyst/documents/export', [DocumentController::class, 'export'])->name('analyst.documents.export');
+    Route::get('/analyst/incidents', [IncidentController::class, 'index'])->name('analyst.incidents.index');
+    Route::get('/analyst/incidents/create', [IncidentController::class, 'create'])->name('analyst.incidents.create');
+    Route::post('/analyst/incidents', [IncidentController::class, 'store'])->name('analyst.incidents.store');
+    Route::get('/analyst/incidents/{id}/edit', [IncidentController::class, 'edit'])->name('analyst.incidents.edit');
+    Route::patch('/analyst/incidents/{id}', [IncidentController::class, 'update'])->name('analyst.incidents.update');
+    Route::delete('/analyst/incidents/{id}', [IncidentController::class, 'destroy'])->name('analyst.incidents.destroy');
+
+});
+
+Route::middleware(['auth', RoleMiddleware::class . ':admin'])->group(function () {
+    // Admin Dashboard
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+
+    // User Management
+    Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users.index');
+    Route::get('/admin/users/create', [UserController::class, 'create'])->name('admin.users.create');
+    Route::post('/admin/users', [UserController::class, 'store'])->name('admin.users.store');
+    Route::get('/admin/users/{id}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
+    Route::patch('/admin/users/{id}', [UserController::class, 'update'])->name('admin.users.update');
+    Route::delete('/admin/users/{id}', [UserController::class, 'destroy'])->name('admin.users.destroy');
+
+    // Logs
+    Route::get('/admin/logs', [AdminLogController::class, 'index'])->name('admin.logs');
+    Route::get('/admin/logs/export', [AdminLogController::class, 'export'])->name('admin.logs.export');
+
+    // Documents
+    Route::get('/admin/documents', [AdminDocumentController::class, 'index'])->name('admin.documents');
+    Route::delete('/admin/documents/{id}', [AdminDocumentController::class, 'destroy'])->name('admin.documents.destroy');
+    Route::get('/admin/documents/export', [AdminDocumentController::class, 'export'])->name('admin.documents.export');
 });
 
 require __DIR__.'/auth.php';

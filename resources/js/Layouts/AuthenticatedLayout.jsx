@@ -11,20 +11,28 @@ export default function AuthenticatedLayout({ children }) {
             <aside className="w-64 bg-white shadow-md">
                 <div className="px-6 py-4 font-bold text-xl border-b">InsightOps</div>
                 <nav className="flex flex-col gap-2 p-4 text-gray-700">
-                    <Link href={route('dashboard')} className="hover:text-indigo-600">🏠 Dashboard</Link>
-                    <Link href="/report-incident" className="hover:text-indigo-600">🚨 Report Incident</Link>
-                    <Link href="/view-logs" className="hover:text-indigo-600">📜 View Logs</Link>
-                    <Link href="/documents" className="hover:text-indigo-600">📁 Documents</Link>
-
+                    {/* Analyst Menu */}
                     {user.role === 'analyst' && (
-                        <>
-                            <div className="mt-4 mb-2 text-sm font-semibold text-gray-500 uppercase">Analyst Tools</div>
-                            <Link href={route('analyst.dashboard')} className="hover:text-indigo-600">📊 Analyst Dashboard</Link>
-                            <Link href={route('analyst.logs')} className="hover:text-indigo-600">📜 Logs</Link>
-                            <Link href={route('analyst.kpis')} className="hover:text-indigo-600">📈 KPIs</Link>
-                            <Link href={route('analyst.documents')} className="hover:text-indigo-600">📁 Documents</Link>
-                        </>
+                    <>
+                        <Link href={route('analyst.dashboard')}>🏠 Dashboard</Link>
+                        <Link href={route('analyst.incidents.create')}>🚨 Report Incident</Link>
+                        <Link href={route('analyst.incidents.index')}>📋 My Incidents</Link>
+                        <Link href={route('analyst.logs')}>📜 View Logs</Link>
+                        <Link href={route('analyst.kpis')}>📈 KPIs</Link>
+                        <Link href={route('analyst.documents')}>📁 Documents</Link>
+                    </>
                     )}
+
+                    {/* Admin Menu */}
+                    {user.role === 'admin' && (
+                    <>
+                        <Link href={route('admin.dashboard')}>🏠 Dashboard</Link>
+                        <Link href={route('admin.users.index')}>👥 Manage Users</Link>
+                        <Link href={route('admin.logs')}>📜 View Logs</Link>
+                        <Link href={route('admin.documents')}>📁 Documents</Link>
+                    </>
+                    )}
+
                 </nav>
             </aside>
 
